@@ -79,17 +79,17 @@
 
 
 
-<meta name="description" content="AIOT">
+<meta name="description" content="Linux Nuttx C RISCV">
 <meta name="keywords" content="C Linux Nuttx">
 <meta property="og:type" content="website">
 <meta property="og:title" content="Hcy&#39;s Notes">
 <meta property="og:url" content="http://yoursite.com/index.html">
 <meta property="og:site_name" content="Hcy&#39;s Notes">
-<meta property="og:description" content="AIOT">
+<meta property="og:description" content="Linux Nuttx C RISCV">
 <meta property="og:locale" content="zh-Hans">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Hcy&#39;s Notes">
-<meta name="twitter:description" content="AIOT">
+<meta name="twitter:description" content="Linux Nuttx C RISCV">
 
 
 
@@ -99,7 +99,7 @@
     root: '/',
     scheme: 'Muse',
     version: '5.1.4',
-    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":true,"scrollpercent":true,"onmobile":true},
     fancybox: true,
     tabs: true,
     motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
@@ -749,6 +749,8 @@
 
   <aside id="sidebar" class="sidebar">
     
+      <div id="sidebar-dimmer"></div>
+    
     <div class="sidebar-inner">
 
       
@@ -762,7 +764,7 @@
               <img class="site-author-image" itemprop="image" src="/images/hcy.JPG" alt="HCY">
             
               <p class="site-author-name" itemprop="name">HCY</p>
-              <p class="site-description motion-element" itemprop="description">AIOT</p>
+              <p class="site-description motion-element" itemprop="description">Linux Nuttx C RISCV</p>
           </div>
 
           <nav class="site-state motion-element">
@@ -805,7 +807,7 @@
                   </span>
                 
                   <span class="links-of-author-item">
-                    <a href="mailto:yourname@gmail.com" target="_blank" title="E-Mail">
+                    <a href="hechengyu@jeejio.com" target="_blank" title="E-Mail">
                       
                         <i class="fa fa-fw fa-envelope"></i>E-Mail</a>
                   </span>
@@ -832,6 +834,13 @@
 
       
 
+      
+        <div class="back-to-top">
+          <i class="fa fa-arrow-up"></i>
+          
+            <span id="scrollpercent"><span>0</span>%</span>
+          
+        </div>
       
 
     </div>
@@ -882,11 +891,6 @@
       </div>
     </footer>
 
-    
-      <div class="back-to-top">
-        <i class="fa fa-arrow-up"></i>
-        
-      </div>
     
 
     
