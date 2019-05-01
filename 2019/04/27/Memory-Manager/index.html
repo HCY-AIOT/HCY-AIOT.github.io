@@ -94,7 +94,7 @@
 <meta property="og:site_name" content="Hcy&#39;s Notes">
 <meta property="og:description" content="概述123#内存管理机制1. 动态内存池管理2. 动态内存堆管理 前提动态内存管理，肯定会出现堆区 已用 未用 交替的情况 内存分配的重要性内存管理策略与内存分配效率是衡量系统性能的重要因素 内存分配策略动态内存池原理 系统启动前，预先分配一块区域 将内存分为 固定大小 [ 4B  8B 16B] 的区域 用链表链接起来  特点 效率高： 内存释放与分配只是链表的增 删操作 内存浪费： 大小固定，">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-04-28T05:34:46.248Z">
+<meta property="og:updated_time" content="2019-04-29T02:19:53.871Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Memory Manager">
 <meta name="twitter:description" content="概述123#内存管理机制1. 动态内存池管理2. 动态内存堆管理 前提动态内存管理，肯定会出现堆区 已用 未用 交替的情况 内存分配的重要性内存管理策略与内存分配效率是衡量系统性能的重要因素 内存分配策略动态内存池原理 系统启动前，预先分配一块区域 将内存分为 固定大小 [ 4B  8B 16B] 的区域 用链表链接起来  特点 效率高： 内存释放与分配只是链表的增 删操作 内存浪费： 大小固定，">
@@ -343,7 +343,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  645
+                  909
                 </span>
               
 
@@ -359,7 +359,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  2
+                  3
                 </span>
               
             </div>
@@ -429,10 +429,18 @@
 </ol>
 </li>
 </ul>
-<h2 id="动态内存池-1"><a href="#动态内存池-1" class="headerlink" title="动态内存池"></a>动态内存池</h2><h3 id="源码"><a href="#源码" class="headerlink" title="源码"></a>源码</h3><p><code>memp.c</code>  <code>memp.h</code></p>
-<h3 id="结构体"><a href="#结构体" class="headerlink" title="结构体"></a>结构体</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span> <span class="keyword">memp_t</span>	:   每个类型宏定义</span><br><span class="line"><span class="number">2.</span> memp_sizes : 每个类型 数据结构占用内存的大小</span><br><span class="line"><span class="number">3.</span> memp_num   ： 每个类型 数据结构个数</span><br><span class="line"><span class="number">4.</span> memp_desc  : 每个类型 对应的字符描述</span><br><span class="line"><span class="number">5.</span></span><br></pre></td></tr></table></figure>
-<p><strong>RISC-V发展的关键在于软件和生态系统</strong><br>恩智浦推出的VEGAboard和织女星开发板结构</p>
-<h3 id="C语言技巧"><a href="#C语言技巧" class="headerlink" title="C语言技巧"></a>C语言技巧</h3><h4 id="枚举定义"><a href="#枚举定义" class="headerlink" title="枚举定义"></a>枚举定义</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">enum</span> &#123;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> LWIP_MEMPOOL(name,num,size,desc)  MEMP_##name,</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"lwip/memp_std.h"</span></span></span><br><span class="line">  MEMP_MAX</span><br><span class="line">&#125; <span class="keyword">memp_t</span>;</span><br></pre></td></tr></table></figure>
+<h2 id="动态内存池-1"><a href="#动态内存池-1" class="headerlink" title="动态内存池"></a>动态内存池</h2><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">只能分配固定大小的内存空间，用户必须知道各个类型的POOL，以及这个类型POOL的个数</span><br><span class="line">如果用户对内核结构足够了解，就能灵活配置各个POOL的数量，从而优化系统性能</span><br></pre></td></tr></table></figure>
+<h3 id="源码文件"><a href="#源码文件" class="headerlink" title="源码文件"></a>源码文件</h3><p><code>memp.c</code>  <code>memp.h</code></p>
+<h3 id="结构体"><a href="#结构体" class="headerlink" title="结构体"></a>结构体</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="number">1.</span> <span class="keyword">memp_t</span>	    :  每个类型	宏定义，枚举</span><br><span class="line"><span class="number">2.</span> memp_sizes   :  每个类型 数据结构占用内存的大小</span><br><span class="line"><span class="number">3.</span> memp_num     ：  每个类型 数据结构个数</span><br><span class="line"><span class="number">4.</span> memp_desc    :  每个类型 对应的字符描述</span><br><span class="line"><span class="number">5.</span> memp_memory  :  每个类型 需要的内存 [一维数组，目的是预先分配内存]</span><br><span class="line"><span class="number">6.</span> memp_table   :  每个类型 缓冲池的第一个空闲POOL</span><br><span class="line"><span class="number">7.</span> memp 		:  每个类型 缓冲池被连接成一个链表</span><br></pre></td></tr></table></figure>
+<h3 id="函数"><a href="#函数" class="headerlink" title="函数"></a>函数</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span>  <span class="title">memp_init</span><span class="params">(<span class="keyword">void</span>)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span> *<span class="title">memp_malloc</span><span class="params">(<span class="keyword">memp_t</span> type)</span></span>;</span><br><span class="line"><span class="function"><span class="keyword">void</span>  <span class="title">memp_free</span><span class="params">(<span class="keyword">memp_t</span> type, <span class="keyword">void</span> *mem)</span></span>;</span><br></pre></td></tr></table></figure>
+<h4 id="memp-init"><a href="#memp-init" class="headerlink" title="memp_init"></a>memp_init</h4><ol>
+<li>memp_memory : 各个类型缓冲池每项  链接成链表</li>
+<li>memp_tab : 各个类型缓冲池 链表头部</li>
+</ol>
+<h4 id="memp-alloc"><a href="#memp-alloc" class="headerlink" title="memp_alloc"></a>memp_alloc</h4><p>​    从对应的链表中取出内存，并返回</p>
+<h4 id="memp-free"><a href="#memp-free" class="headerlink" title="memp_free"></a>memp_free</h4><h2 id="动态内存堆-1"><a href="#动态内存堆-1" class="headerlink" title="动态内存堆"></a>动态内存堆</h2><p>本质： 对一个事先定义好的内存块进行合理有效的组织和管理</p>
+<h3 id="数据结构"><a href="#数据结构" class="headerlink" title="数据结构"></a>数据结构</h3><figure class="highlight"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">1. 内存块大小具有最小限制，MIN_SIZE = 12</span><br><span class="line">2. 如果MIN_SIZE 太小，导致大的内存块 被不断细分为小的内存块</span><br><span class="line">   如果MIN_SIZE 太大，导致内存浪费</span><br><span class="line">3. 内存回收函数查看附近是否空闲，合并成一个大的内存块</span><br></pre></td></tr></table></figure>
+<h2 id="C语言技巧"><a href="#C语言技巧" class="headerlink" title="C语言技巧"></a>C语言技巧</h2><h4 id="枚举定义"><a href="#枚举定义" class="headerlink" title="枚举定义"></a>枚举定义</h4><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">enum</span> &#123;</span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> LWIP_MEMPOOL(name,num,size,desc)  MEMP_##name,</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">"lwip/memp_std.h"</span></span></span><br><span class="line">  MEMP_MAX</span><br><span class="line">&#125; <span class="keyword">memp_t</span>;</span><br></pre></td></tr></table></figure>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">if</span> LWIP_RAW</span></span><br><span class="line">LWIP_MEMPOOL(RAW_PCB,        MEMP_NUM_RAW_PCB,         <span class="keyword">sizeof</span>(struct raw_pcb),        <span class="string">"RAW_PCB"</span>)</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span> <span class="comment">/* LWIP_RAW */</span></span></span><br><span class="line"></span><br><span class="line"><span class="meta">#<span class="meta-keyword">if</span> LWIP_UDP</span></span><br><span class="line">LWIP_MEMPOOL(UDP_PCB,        MEMP_NUM_UDP_PCB,         <span class="keyword">sizeof</span>(struct udp_pcb),        <span class="string">"UDP_PCB"</span>)</span><br><span class="line"><span class="meta">#<span class="meta-keyword">endif</span> <span class="comment">/* LWIP_UDP */</span></span></span><br><span class="line">    。。。。。</span><br></pre></td></tr></table></figure>
 <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="keyword">enum</span> &#123;</span><br><span class="line">    MEMP_RAW_PCB,</span><br><span class="line">    MEMP_UDP_PCB,</span><br><span class="line">    。。。。</span><br><span class="line">    MEMP_MAX</span><br><span class="line">&#125; <span class="keyword">memp_t</span>;</span><br></pre></td></tr></table></figure>
 
@@ -587,7 +595,7 @@ var jiathis_config={
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">6</span>
+                  <span class="site-state-item-count">9</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -598,7 +606,7 @@ var jiathis_config={
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-count">3</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -609,7 +617,7 @@ var jiathis_config={
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">2</span>
+                  <span class="site-state-item-count">3</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -664,7 +672,7 @@ var jiathis_config={
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#前提"><span class="nav-number">1.1.</span> <span class="nav-text">前提</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#内存分配的重要性"><span class="nav-number">1.2.</span> <span class="nav-text">内存分配的重要性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内存分配策略"><span class="nav-number">2.</span> <span class="nav-text">内存分配策略</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#动态内存池"><span class="nav-number">2.1.</span> <span class="nav-text">动态内存池</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#原理"><span class="nav-number">2.1.1.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#特点"><span class="nav-number">2.1.2.</span> <span class="nav-text">特点</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#动态内存堆"><span class="nav-number">2.2.</span> <span class="nav-text">动态内存堆</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#原理-1"><span class="nav-number">2.2.1.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#特点-1"><span class="nav-number">2.2.2.</span> <span class="nav-text">特点</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#动态内存池-1"><span class="nav-number">3.</span> <span class="nav-text">动态内存池</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#源码"><span class="nav-number">3.1.</span> <span class="nav-text">源码</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结构体"><span class="nav-number">3.2.</span> <span class="nav-text">结构体</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#C语言技巧"><span class="nav-number">3.3.</span> <span class="nav-text">C语言技巧</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#枚举定义"><span class="nav-number">3.3.1.</span> <span class="nav-text">枚举定义</span></a></li></ol></li></ol></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#前提"><span class="nav-number">1.1.</span> <span class="nav-text">前提</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#内存分配的重要性"><span class="nav-number">1.2.</span> <span class="nav-text">内存分配的重要性</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#内存分配策略"><span class="nav-number">2.</span> <span class="nav-text">内存分配策略</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#动态内存池"><span class="nav-number">2.1.</span> <span class="nav-text">动态内存池</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#原理"><span class="nav-number">2.1.1.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#特点"><span class="nav-number">2.1.2.</span> <span class="nav-text">特点</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#动态内存堆"><span class="nav-number">2.2.</span> <span class="nav-text">动态内存堆</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#原理-1"><span class="nav-number">2.2.1.</span> <span class="nav-text">原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#特点-1"><span class="nav-number">2.2.2.</span> <span class="nav-text">特点</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#动态内存池-1"><span class="nav-number">3.</span> <span class="nav-text">动态内存池</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#源码文件"><span class="nav-number">3.1.</span> <span class="nav-text">源码文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#结构体"><span class="nav-number">3.2.</span> <span class="nav-text">结构体</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#函数"><span class="nav-number">3.3.</span> <span class="nav-text">函数</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#memp-init"><span class="nav-number">3.3.1.</span> <span class="nav-text">memp_init</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#memp-alloc"><span class="nav-number">3.3.2.</span> <span class="nav-text">memp_alloc</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#memp-free"><span class="nav-number">3.3.3.</span> <span class="nav-text">memp_free</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#动态内存堆-1"><span class="nav-number">4.</span> <span class="nav-text">动态内存堆</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#数据结构"><span class="nav-number">4.1.</span> <span class="nav-text">数据结构</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#C语言技巧"><span class="nav-number">5.</span> <span class="nav-text">C语言技巧</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#枚举定义"><span class="nav-number">5.0.1.</span> <span class="nav-text">枚举定义</span></a></li></ol></li></ol></div>
             
 
           </div>
@@ -706,7 +714,7 @@ var jiathis_config={
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">1k</span>
+    <span title="Site words total count">3.9k</span>
   
 </div>
 
@@ -723,7 +731,7 @@ var jiathis_config={
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共1k字</span>
+  <span class="post-count">博客全站共3.9k字</span>
 </div>
         
 
