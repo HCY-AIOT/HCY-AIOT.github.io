@@ -75,7 +75,7 @@
 
 
 
-  <meta name="keywords" content="LWIP,">
+  <meta name="keywords" content="Hexo, NexT">
 
 
 
@@ -86,18 +86,18 @@
 
 
 
-<meta name="description" content="概述协议栈的本质： 数据包处理  链路层： 判断数据包类型    提取数据字段        记录主机物理地址信息 IP层：  根据IP地址实现 数据的 存储  转发   重装  提取传输层信息   TCP： 更新TCP状态机   向应用程序提交数据  所以 ： 数据包的管理应该高效，并减少各层间传递时的时间与空间的开销 12345678910111213141516171819202122232">
-<meta name="keywords" content="LWIP">
+<meta name="description" content="Linux Nuttx C RISCV">
+<meta name="keywords" content="C Linux Nuttx">
 <meta property="og:type" content="article">
-<meta property="og:title" content="LWIP_Packet_Manager">
-<meta property="og:url" content="http://yoursite.com/2019/05/01/LWIP-Packet-Manager/index.html">
+<meta property="og:title" content="LWIP-TCP">
+<meta property="og:url" content="http://yoursite.com/2019/05/02/LWIP-TCP/index.html">
 <meta property="og:site_name" content="Hcy&#39;s Notes">
-<meta property="og:description" content="概述协议栈的本质： 数据包处理  链路层： 判断数据包类型    提取数据字段        记录主机物理地址信息 IP层：  根据IP地址实现 数据的 存储  转发   重装  提取传输层信息   TCP： 更新TCP状态机   向应用程序提交数据  所以 ： 数据包的管理应该高效，并减少各层间传递时的时间与空间的开销 12345678910111213141516171819202122232">
+<meta property="og:description" content="Linux Nuttx C RISCV">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-05-01T05:37:35.607Z">
+<meta property="og:updated_time" content="2019-05-02T08:00:00.850Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="LWIP_Packet_Manager">
-<meta name="twitter:description" content="概述协议栈的本质： 数据包处理  链路层： 判断数据包类型    提取数据字段        记录主机物理地址信息 IP层：  根据IP地址实现 数据的 存储  转发   重装  提取传输层信息   TCP： 更新TCP状态机   向应用程序提交数据  所以 ： 数据包的管理应该高效，并减少各层间传递时的时间与空间的开销 12345678910111213141516171819202122232">
+<meta name="twitter:title" content="LWIP-TCP">
+<meta name="twitter:description" content="Linux Nuttx C RISCV">
 
 
 
@@ -127,13 +127,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2019/05/01/LWIP-Packet-Manager/">
+  <link rel="canonical" href="http://yoursite.com/2019/05/02/LWIP-TCP/">
 
 
 
 
 
-  <title>LWIP_Packet_Manager | Hcy's Notes</title>
+  <title>LWIP-TCP | Hcy's Notes</title>
   
 
 
@@ -260,7 +260,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/01/LWIP-Packet-Manager/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/02/LWIP-TCP/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="HCY">
@@ -277,7 +277,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">LWIP_Packet_Manager</h1>
+          <h1 class="post-title" itemprop="name headline">LWIP-TCP</h1>
         
 
         <div class="post-meta">
@@ -289,8 +289,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-01T10:16:47+08:00">
-                2019-05-01
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-02T16:00:00+08:00">
+                2019-05-02
               </time>
             
 
@@ -299,28 +299,6 @@
             
           </span>
 
-          
-            <span class="post-category">
-            
-              <span class="post-meta-divider">|</span>
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-folder-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">分类于</span>
-              
-              
-                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-                  <a href="/categories/LWIP/" itemprop="url" rel="index">
-                    <span itemprop="name">LWIP</span>
-                  </a>
-                </span>
-
-                
-                
-              
-            </span>
           
 
           
@@ -343,7 +321,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  725
+                  0
                 </span>
               
 
@@ -359,7 +337,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  2
+                  1
                 </span>
               
             </div>
@@ -380,52 +358,7 @@
       
 
       
-        <h2 id="概述"><a href="#概述" class="headerlink" title="概述"></a>概述</h2><p><strong>协议栈的本质</strong>： 数据包处理</p>
-<ol>
-<li>链路层： 判断数据包类型    提取数据字段        记录主机物理地址信息</li>
-<li>IP层：  根据IP地址实现 数据的 存储  转发   重装  提取传输层信息  </li>
-<li>TCP： 更新TCP状态机   向应用程序提交数据</li>
-</ol>
-<p><strong>所以</strong> ： 数据包的管理应该高效，并减少各层间传递时的时间与空间的开销</p>
-<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">pbuf</span> &#123;</span></span><br><span class="line">  <span class="comment">/** next pbuf in singly linked pbuf chain */</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">pbuf</span> *<span class="title">next</span>;</span></span><br><span class="line"></span><br><span class="line">  <span class="comment">/** pointer to the actual data in the buffer */</span></span><br><span class="line">  <span class="keyword">void</span> *payload;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * total length of this buffer and all next buffers in chain</span></span><br><span class="line"><span class="comment">   * belonging to the same packet.</span></span><br><span class="line"><span class="comment">   *</span></span><br><span class="line"><span class="comment">   * For non-queue packet chains this is the invariant:</span></span><br><span class="line"><span class="comment">   * p-&gt;tot_len == p-&gt;len + (p-&gt;next? p-&gt;next-&gt;tot_len: 0)</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="keyword">u16_t</span> tot_len;</span><br><span class="line">  </span><br><span class="line">  <span class="comment">/** length of this buffer */</span></span><br><span class="line">  <span class="keyword">u16_t</span> len;  </span><br><span class="line"></span><br><span class="line">  <span class="comment">/** pbuf_type as u8_t instead of enum to save space */</span></span><br><span class="line">  <span class="keyword">u8_t</span> <span class="comment">/*pbuf_type*/</span> type;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/** misc flags */</span></span><br><span class="line">  <span class="keyword">u8_t</span> flags;</span><br><span class="line"></span><br><span class="line">  <span class="comment">/**</span></span><br><span class="line"><span class="comment">   * the reference count always equals the number of pointers</span></span><br><span class="line"><span class="comment">   * that refer to this pbuf. This can be pointers from an application,</span></span><br><span class="line"><span class="comment">   * the stack itself, or pbuf-&gt;next pointers from a chain.</span></span><br><span class="line"><span class="comment">   */</span></span><br><span class="line">  <span class="keyword">u16_t</span> ref;</span><br><span class="line">  </span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<h2 id="分层特点"><a href="#分层特点" class="headerlink" title="分层特点"></a>分层特点</h2><p><strong>特点</strong>：</p>
-<ul>
-<li>各个层独立，负责完成独立任务 [数据链路： 物理线路传输封装   IP层：找到主机   传输层：找到进程  详细见7.1.1 ]</li>
-<li>各个层可以单独实现，只要保证实现接口</li>
-</ul>
-<p><strong>但是</strong>： 如果严格按照分层，导致pkt 在各层传递变得缓慢[memcpy]</p>
-<p><strong>解决</strong>： 各层协议可以直接对数据包中属于其他层协议的字段进行操作</p>
-<p><strong>总结</strong>：</p>
-<ul>
-<li><p>结构上按照分层模型，每层都在一个单独的模块中实现，上下提供输入/出 接口 </p>
-</li>
-<li><p>协议栈之间：分层思想并非严格，各个层存在数据交叉存取的现象</p>
-</li>
-<li><p>用户层与协议栈之间： 分层思想并非严格，User 程序可以直接访问协议栈内部数据包，也可以共共同使用一段内存</p>
-<p>从而避免内存拷贝带来的开销</p>
-</li>
-</ul>
-<h2 id="Pbuf"><a href="#Pbuf" class="headerlink" title="Pbuf"></a>Pbuf</h2><h3 id="概述-1"><a href="#概述-1" class="headerlink" title="概述"></a>概述</h3><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">pbuf</span> &#123;</span></span><br><span class="line">  <span class="class"><span class="keyword">struct</span> <span class="title">pbuf</span> *<span class="title">next</span>;</span></span><br><span class="line">  <span class="keyword">void</span> *payload;</span><br><span class="line">  <span class="keyword">u16_t</span> tot_len;</span><br><span class="line">  <span class="keyword">u16_t</span> len; </span><br><span class="line">  <span class="keyword">u8_t</span> <span class="comment">/*pbuf_type*/</span> type;</span><br><span class="line">  <span class="keyword">u8_t</span> flags;</span><br><span class="line">  <span class="keyword">u16_t</span> ref;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-<p>图： 见7.2.1</p>
-<h3 id="PBUF-RAM"><a href="#PBUF-RAM" class="headerlink" title="PBUF_RAM"></a>PBUF_RAM</h3><p><strong>使用者</strong>： 协议栈与应用程序 的 待发数据</p>
-<p><strong>图例</strong> ：7-1</p>
-<p><strong>关键点</strong>： offset 存储数据包在各个首部字段： TCP报文首部    IP首部    以太网帧首部</p>
-<h3 id="PBUF-POOL"><a href="#PBUF-POOL" class="headerlink" title="PBUF_POOL"></a>PBUF_POOL</h3><p><strong>使用者</strong> ： 网卡接收数据包</p>
-<p><strong>图例</strong>： 7-2</p>
-<p><strong>关键点</strong>：数据包很长时，分配多个Pool ,并使用链表将其 链接起来 </p>
-<h3 id="PBUF-ROM-PBUF-REF"><a href="#PBUF-ROM-PBUF-REF" class="headerlink" title="PBUF_ROM  PBUF_REF"></a>PBUF_ROM  PBUF_REF</h3><p><strong>图例</strong>： 7-3 </p>
-<p><strong>关键点</strong>：  只分配 pbuf结构体，不分配数据区，而数据区可能存在 RAM 或 ROM </p>
-<h3 id="混合"><a href="#混合" class="headerlink" title="混合"></a>混合</h3><p>对于一个数据包，可能是不同类型的几个pbuf,链接起来的, 共同保存 一个数据包的数据</p>
-<h2 id="数据包申请"><a href="#数据包申请" class="headerlink" title="数据包申请"></a>数据包申请</h2><p><strong>关键参数</strong></p>
-<ul>
-<li>pbuf类型： 上一章节的描述</li>
-<li>pbuf 对应的层： 不同层 要预留出 对应的空间，即pkbuf中 offset 的大小</li>
-</ul>
-<h2 id="数据包释放"><a href="#数据包释放" class="headerlink" title="数据包释放"></a>数据包释放</h2><p><strong>关键参数</strong></p>
-<ul>
-<li>ref:  ref参数决定了pbuf  是否允许被释放</li>
-</ul>
-
+        
       
     </div>
     
@@ -443,12 +376,6 @@
 
     <footer class="post-footer">
       
-        <div class="post-tags">
-          
-            <a href="/tags/LWIP/" <i class="fa fa-tag"> LWIP</a>
-          
-        </div>
-      
 
       
       
@@ -458,8 +385,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/04/28/Demo/" rel="next" title="Demo">
-                <i class="fa fa-chevron-left"></i> Demo
+              <a href="/2019/05/02/LWIP-UDP/" rel="next" title="LWIP-UDP">
+                <i class="fa fa-chevron-left"></i> LWIP-UDP
               </a>
             
           </div>
@@ -467,10 +394,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/05/01/LWIP-NetIf/" rel="prev" title="LWIP_NetIf">
-                LWIP_NetIf <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -550,17 +473,8 @@ var jiathis_config={
       
 
       
-        <ul class="sidebar-nav motion-element">
-          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
-            文章目录
-          </li>
-          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
-            站点概览
-          </li>
-        </ul>
-      
 
-      <section class="site-overview-wrap sidebar-panel">
+      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -644,22 +558,6 @@ var jiathis_config={
         </div>
       </section>
 
-      
-      <!--noindex-->
-        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
-          <div class="post-toc">
-
-            
-              
-            
-
-            
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#分层特点"><span class="nav-number">2.</span> <span class="nav-text">分层特点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Pbuf"><span class="nav-number">3.</span> <span class="nav-text">Pbuf</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#概述-1"><span class="nav-number">3.1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PBUF-RAM"><span class="nav-number">3.2.</span> <span class="nav-text">PBUF_RAM</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PBUF-POOL"><span class="nav-number">3.3.</span> <span class="nav-text">PBUF_POOL</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#PBUF-ROM-PBUF-REF"><span class="nav-number">3.4.</span> <span class="nav-text">PBUF_ROM  PBUF_REF</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#混合"><span class="nav-number">3.5.</span> <span class="nav-text">混合</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据包申请"><span class="nav-number">4.</span> <span class="nav-text">数据包申请</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据包释放"><span class="nav-number">5.</span> <span class="nav-text">数据包释放</span></a></li></ol></div>
-            
-
-          </div>
-        </section>
-      <!--/noindex-->
       
 
       
