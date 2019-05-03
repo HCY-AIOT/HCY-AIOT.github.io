@@ -75,7 +75,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT">
+  <meta name="keywords" content="LWIP,">
 
 
 
@@ -86,18 +86,18 @@
 
 
 
-<meta name="description" content="Linux Nuttx C RISCV">
-<meta name="keywords" content="C Linux Nuttx">
+<meta name="description" content="超时重传与RTTRTT ：round trip time 往返时间 1234567891011struct tcp_pcb &amp;#123;  /* Retransmission timer. */  s16_t rtime;  /* RTT (round trip time) estimation variables */  u32_t rttest; /* RTT estimate in 500m">
+<meta name="keywords" content="LWIP">
 <meta property="og:type" content="article">
 <meta property="og:title" content="LWIP-TCP">
 <meta property="og:url" content="http://yoursite.com/2019/05/02/LWIP-TCP/index.html">
 <meta property="og:site_name" content="Hcy&#39;s Notes">
-<meta property="og:description" content="Linux Nuttx C RISCV">
+<meta property="og:description" content="超时重传与RTTRTT ：round trip time 往返时间 1234567891011struct tcp_pcb &amp;#123;  /* Retransmission timer. */  s16_t rtime;  /* RTT (round trip time) estimation variables */  u32_t rttest; /* RTT estimate in 500m">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-05-02T08:00:00.850Z">
+<meta property="og:updated_time" content="2019-05-03T11:56:52.054Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="LWIP-TCP">
-<meta name="twitter:description" content="Linux Nuttx C RISCV">
+<meta name="twitter:description" content="超时重传与RTTRTT ：round trip time 往返时间 1234567891011struct tcp_pcb &amp;#123;  /* Retransmission timer. */  s16_t rtime;  /* RTT (round trip time) estimation variables */  u32_t rttest; /* RTT estimate in 500m">
 
 
 
@@ -321,7 +321,7 @@
                   <span class="post-meta-item-text">字数统计&#58;</span>
                 
                 <span title="字数统计">
-                  0
+                  548
                 </span>
               
 
@@ -337,7 +337,7 @@
                   <span class="post-meta-item-text">阅读时长 &asymp;</span>
                 
                 <span title="阅读时长">
-                  1
+                  2
                 </span>
               
             </div>
@@ -358,7 +358,62 @@
       
 
       
-        
+        <h2 id="超时重传与RTT"><a href="#超时重传与RTT" class="headerlink" title="超时重传与RTT"></a>超时重传与RTT</h2><p><strong>RTT</strong> ：<code>round trip time</code> 往返时间</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">tcp_pcb</span> &#123;</span></span><br><span class="line">  <span class="comment">/* Retransmission timer. */</span></span><br><span class="line">  <span class="keyword">s16_t</span> rtime;</span><br><span class="line">  <span class="comment">/* RTT (round trip time) estimation variables */</span></span><br><span class="line">  <span class="keyword">u32_t</span> rttest; <span class="comment">/* RTT estimate in 500ms ticks */</span></span><br><span class="line">  <span class="keyword">u32_t</span> rtseq;  <span class="comment">/* sequence number being timed */</span></span><br><span class="line">  <span class="keyword">s16_t</span> sa, sv; <span class="comment">/* @todo document this */</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">s16_t</span> rto;    <span class="comment">/* retransmission time-out */</span></span><br><span class="line">  <span class="keyword">u8_t</span> nrtx;    <span class="comment">/* number of retransmissions */</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p><code>rttest</code>:   测算报文段的　<strong>往返时间</strong></p>
+<p><code>rtseq</code>: rttest 测试的报文段的序号</p>
+<p><code>rtime</code> : 重传定时器，单位为500ms,  与 rto对比判断是否需要重传</p>
+<p><code>rto</code> : 根据　<strong>rttest</strong>  　<strong>动态设置</strong>　重传超时时间</p>
+<p><code>nrtx</code> :  报文段重传次数</p>
+<p>总结：　</p>
+<ol>
+<li><p>rtime 是定时器，rto是超时时间 ，其他几个变量决定了rto的计算</p>
+</li>
+<li><p>超时重发相关的代码位置： 3个</p>
+<p>tcp_recive : 接收到应答包的处理</p>
+<p>tcp_output_segment :  发送数据包</p>
+<p>tcp_slowtmr: 超时定时器处理函数</p>
+</li>
+<li><p>超时定时器的起始位置</p>
+<p>因为超时定时器与 TCP_TCB一一对应，所以在 TCB数据包发送函数中启动，且只自动一次，除非定时器被关闭</p>
+</li>
+<li></li>
+</ol>
+<h2 id="逻辑分析"><a href="#逻辑分析" class="headerlink" title="逻辑分析"></a>逻辑分析</h2><ul>
+<li><p>超时时间如何确定</p>
+</li>
+<li><p>超时定时器属于  <strong>TCP_TCB</strong> </p>
+<p>共用同一个定时器</p>
+</li>
+<li><p>开启超时计时       ： 出现第一个报文段   </p>
+<p>链接对应的TCP_TCB中出现第一个 报文段</p>
+</li>
+<li><p>超时计时器更新     ：500ms 定时器达到</p>
+</li>
+<li><p>关闭超时计时       ： unack 链表为空</p>
+</li>
+<li><p>复位超时计时器　　：　收到应答包   超时时间到达</p>
+</li>
+<li><p>超时时间计算 [RTT]　：　收到比 <code>rtseq</code> 大的应答号</p>
+<p>RTO的计算：依赖往返时间的　平均值和方差，</p>
+<p>而平均值与方差　在每次　往返时间更新时，得到更新</p>
+</li>
+<li><p>往返时间开启：　出现第一个报文段   </p>
+</li>
+<li><p>往返时间更新 ： 收到比 <code>rtseq</code> 大的应答号</p>
+</li>
+<li><p>往返时间关闭：　收到比 <code>rtseq</code> 大的应答号</p>
+</li>
+</ul>
+<p>关键：</p>
+<ol>
+<li><p>TCP采用<code>累计确认</code>，只要确认号包含了正在进行RTT估计的报文段，就可以进行RTT计算</p>
+<p><strong>确认号： </strong> 接收方成功接收的数据包序号<code>A + 1</code>，而且保证 <strong>小于确认号的报文段</strong>都是接收成功的</p>
+<p><strong>发送序号：</strong> 当前报文段中第一个数据的字节序号</p>
+</li>
+</ol>
+<h2 id="慢启动与拥塞避免"><a href="#慢启动与拥塞避免" class="headerlink" title="慢启动与拥塞避免"></a>慢启动与拥塞避免</h2><h2 id="基础知识"><a href="#基础知识" class="headerlink" title="基础知识"></a>基础知识</h2><p>报文段： TCP数据包</p>
+
       
     </div>
     
@@ -375,6 +430,12 @@
     
 
     <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/LWIP/" <i class="fa fa-tag"> LWIP</a>
+          
+        </div>
       
 
       
@@ -394,6 +455,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/05/03/LWIP-TCP-1/" rel="prev" title="LWIP-TCP-1">
+                LWIP-TCP-1 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -473,8 +538,17 @@ var jiathis_config={
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -491,7 +565,7 @@ var jiathis_config={
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">13</span>
+                  <span class="site-state-item-count">14</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -559,6 +633,22 @@ var jiathis_config={
       </section>
 
       
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#超时重传与RTT"><span class="nav-number">1.</span> <span class="nav-text">超时重传与RTT</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#逻辑分析"><span class="nav-number">2.</span> <span class="nav-text">逻辑分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#慢启动与拥塞避免"><span class="nav-number">3.</span> <span class="nav-text">慢启动与拥塞避免</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#基础知识"><span class="nav-number">4.</span> <span class="nav-text">基础知识</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
 
       
         <div class="back-to-top">
@@ -594,7 +684,7 @@ var jiathis_config={
     
       <span class="post-meta-item-text">Site words total count&#58;</span>
     
-    <span title="Site words total count">5.9k</span>
+    <span title="Site words total count">6.5k</span>
   
 </div>
 
@@ -611,7 +701,7 @@ var jiathis_config={
 
 <div class="theme-info">
   <div class="powered-by"></div>
-  <span class="post-count">博客全站共5.9k字</span>
+  <span class="post-count">博客全站共6.5k字</span>
 </div>
         
 
